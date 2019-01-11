@@ -46,7 +46,7 @@ def dump_file(fpath, content):
     sys.stdout.write(content)
     sys.stdout.flush()
   else:
-    with open(fpath) as f:
+    with open(fpath, 'w') as f:
       f.write(content)
 
 
