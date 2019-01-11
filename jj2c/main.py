@@ -60,9 +60,9 @@ def main(args):
     with open(args.template) as f:
       dump_file(args.output, jj2c.compile(f.read(), variables))
   elif args.template.endswith('.zip') and args.output.endswith('.zip'):
-    jj2c.compile_zip_2_zip(args.template, args.output)
+    jj2c.compile_zip_2_zip(args.template, args.output, variables)
   elif args.output.endswith('.zip'):
-    jj2c.compile_dir_2_zip(args.template, args.output)
+    jj2c.compile_dir_2_zip(args.template, args.output, variables)
   elif not args.template.endswith('.zip') and not args.output.endswith('.zip'):
     jj2c.compile_dir(args.template, args.output)
   else:
