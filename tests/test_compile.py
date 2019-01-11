@@ -1,8 +1,8 @@
 # Sample Test passing with nose and pytest
 import os
-import tempfile
 import shutil
-
+import tempfile
+import zipfile
 #from snapshottest import snapshot
 
 import jj2c
@@ -35,6 +35,15 @@ def collect_contents(folder):
   return contents
 
 
+def collect_contents_zip(zippath):
+  dir_out = tempfile.mkdtemp()
+  try:
+    shutil.unpack_archive(zippath, dir_out)
+    return collect_contents(dir_out)
+  finally:
+    shutil.rmtree(dir_out)
+
+
 def test_BatchCompiler_1(snapshot):
   dir_tpl = os.path.join(FIXTURES_DIR, 'a')
   dir_out = tempfile.mkdtemp()
@@ -44,5 +53,22 @@ def test_BatchCompiler_1(snapshot):
     batch.compile()
     snapshot.assert_match(
         collect_contents(dir_out))
+  finally:
+    shutil.rmtree(dir_out)
+
+
+def test_compile_zip(snapshot):
+  dir_tpl = os.path.join(FIXTURES_DIR, 'a')
+  dir_out = tempfile.mkdtemp()
+  tpl_zip_path = os.path.join(dir_out, 'a.zip')
+  o_zip_path = os.path.join(dir_out, 'o.zip')
+  dir_tpl = os.path.join(FIXTURES_DIR, 'a')
+
+  shutil.make_archive(tpl_zip_path[:-4], 'zip', dir_tpl)
+  variables = {'a': 'AAA zip', 'b': 'BBB zip'}
+
+  try:
+    jj2c.compile_zip(tpl_zip_path, o_zip_path, variables)
+    snapshot.assert_match(collect_contents_zip(o_zip_path))
   finally:
     shutil.rmtree(dir_out)

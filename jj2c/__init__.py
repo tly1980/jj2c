@@ -1,6 +1,8 @@
-import os
 import json
 import logging
+import os
+import shutil
+import tempfile
 
 import jinja2
 
@@ -33,11 +35,6 @@ def compile(template_str, variables):
   return jinja2.Template(template_str).render(**variables)
 
 
-def compile_file(template_fpath, variables):
-  with open(template_fpath, 'r') as f:
-    return jinja2.Template(f.read()).render(**variables)
-
-
 class BatchCompiler(object):
   def __init__(self, variables, template_dir, output_dir):
     self.variables = variables
@@ -53,5 +50,35 @@ class BatchCompiler(object):
           os.makedirs(dir_out)
         fname_in = os.path.join(root, fname)
         fname_out = os.path.join(dir_out, fname)
+        if fname_out.endswith('.tpl'):
+          fname_out = fname_out[:-4]
         with open(fname_out, 'w') as fout:
           fout.write(compile_file(fname_in, self.variables))
+
+
+def compile_file(template_fpath, variables):
+  with open(template_fpath, 'r') as f:
+    return jinja2.Template(f.read()).render(**variables)
+
+
+def compile_dir(template_dir, output_dir, variables):
+  batcher = BatchCompiler(variables, template_dir, output_dir)
+  batcher.compile()
+
+
+def compile_zip(src_path, dest_path, variables):
+  dir_xtract = tempfile.mkdtemp()
+  dir_compile = tempfile.mkdtemp()
+  try:
+    shutil.unpack_archive(src_path, dir_xtract)
+    batcher = BatchCompiler(variables, dir_xtract, dir_compile)
+    batcher.compile()
+
+    dest_path2 = dest_path
+    if dest_path2.endswith('.zip'):
+      dest_path2 = dest_path2[:-4]
+    shutil.make_archive(dest_path2, 'zip', dir_compile)
+
+  finally:
+    shutil.rmtree(dir_xtract)
+    shutil.rmtree(dir_compile)
