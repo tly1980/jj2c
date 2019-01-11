@@ -72,7 +72,7 @@ def zip_folder(folder, dest_path):
   shutil.make_archive(dest_path, 'zip', folder)
 
 
-def compile_dir_to_zip(template_dir, dest_path, variables):
+def compile_dir_2_zip(template_dir, dest_path, variables):
   dir_compile = tempfile.mkdtemp()
 
   try:
@@ -82,7 +82,7 @@ def compile_dir_to_zip(template_dir, dest_path, variables):
     shutil.rmtree(dir_compile)
 
 
-def compile_zip(src_path, dest_path, variables):
+def compile_zip_2_zip(src_path, dest_path, variables):
   dir_xtract = tempfile.mkdtemp()
   dir_compile = tempfile.mkdtemp()
   try:
