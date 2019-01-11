@@ -17,10 +17,10 @@ def test_compile():
   assert text == 'hello world!'
 
 
-def test_compile_file():
+def test_compile_file(snapshot):
   fpath = os.path.join(FIXTURES_DIR, 'hello.tpl')
   text = jj2c.compile_file(fpath, {'name': 'compile_file'})
-  assert text == 'hello compile_file!'
+  snapshot.assert_match(text)
 
 
 def collect_contents(folder):
@@ -57,7 +57,7 @@ def test_BatchCompiler_1(snapshot):
     shutil.rmtree(dir_out)
 
 
-def test_compile_zip(snapshot):
+def test_compile_zip_2_zip(snapshot):
   dir_tpl = os.path.join(FIXTURES_DIR, 'a')
   dir_out = tempfile.mkdtemp()
   tpl_zip = os.path.join(dir_out, 'a.zip')
@@ -67,13 +67,13 @@ def test_compile_zip(snapshot):
   variables = {'a': 'AAA zip', 'b': 'BBB zip'}
 
   try:
-    jj2c.compile_zip(tpl_zip, o_zip, variables)
+    jj2c.compile_zip_2_zip(tpl_zip, o_zip, variables)
     snapshot.assert_match(collect_contents_zip(o_zip))
   finally:
     shutil.rmtree(dir_out)
 
 
-def test_compile_dir_to_zip(snapshot):
+def test_compile_dir_2_zip(snapshot):
   dir_tpl = os.path.join(FIXTURES_DIR, 'a')
   dir_out = tempfile.mkdtemp()
   o_zip = os.path.join(dir_out, 'o.zip')
@@ -83,7 +83,7 @@ def test_compile_dir_to_zip(snapshot):
       'b': 'BBB compile_dir_to_zip'}
 
   try:
-    jj2c.compile_dir_to_zip(dir_tpl, o_zip, variables)
+    jj2c.compile_dir_2_zip(dir_tpl, o_zip, variables)
     snapshot.assert_match(collect_contents_zip(o_zip))
   finally:
     shutil.rmtree(dir_out)
