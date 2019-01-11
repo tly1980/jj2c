@@ -23,13 +23,7 @@ def load_variables(fpath):
       return yaml.load(f)
 
 
-def render_file(variables, template_f, output_f):
-  template_f.read()
-  pass
-
-
 def main(args):
-
   pass
 
 

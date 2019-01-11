@@ -66,19 +66,29 @@ def compile_dir(template_dir, output_dir, variables):
   batcher.compile()
 
 
+def zip_folder(folder, dest_path):
+  if dest_path.endswith('.zip'):
+    dest_path = dest_path[:-4]
+  shutil.make_archive(dest_path, 'zip', folder)
+
+
+def compile_dir_to_zip(template_dir, dest_path, variables):
+  dir_compile = tempfile.mkdtemp()
+
+  try:
+    compile_dir(template_dir, dir_compile, variables)
+    zip_folder(dir_compile, dest_path)
+  finally:
+    shutil.rmtree(dir_compile)
+
+
 def compile_zip(src_path, dest_path, variables):
   dir_xtract = tempfile.mkdtemp()
   dir_compile = tempfile.mkdtemp()
   try:
     shutil.unpack_archive(src_path, dir_xtract)
-    batcher = BatchCompiler(variables, dir_xtract, dir_compile)
-    batcher.compile()
-
-    dest_path2 = dest_path
-    if dest_path2.endswith('.zip'):
-      dest_path2 = dest_path2[:-4]
-    shutil.make_archive(dest_path2, 'zip', dir_compile)
-
+    compile_dir(dir_xtract, dir_compile, variables)
+    zip_folder(dir_compile, dest_path)
   finally:
     shutil.rmtree(dir_xtract)
     shutil.rmtree(dir_compile)

@@ -58,6 +58,7 @@ def test_BatchCompiler_1(snapshot):
 
 
 def test_compile_zip(snapshot):
+
   dir_tpl = os.path.join(FIXTURES_DIR, 'a')
   dir_out = tempfile.mkdtemp()
   tpl_zip_path = os.path.join(dir_out, 'a.zip')
