@@ -58,12 +58,10 @@ def test_BatchCompiler_1(snapshot):
 
 
 def test_compile_zip(snapshot):
-
   dir_tpl = os.path.join(FIXTURES_DIR, 'a')
   dir_out = tempfile.mkdtemp()
   tpl_zip_path = os.path.join(dir_out, 'a.zip')
   o_zip_path = os.path.join(dir_out, 'o.zip')
-  dir_tpl = os.path.join(FIXTURES_DIR, 'a')
 
   shutil.make_archive(tpl_zip_path[:-4], 'zip', dir_tpl)
   variables = {'a': 'AAA zip', 'b': 'BBB zip'}
@@ -71,5 +69,21 @@ def test_compile_zip(snapshot):
   try:
     jj2c.compile_zip(tpl_zip_path, o_zip_path, variables)
     snapshot.assert_match(collect_contents_zip(o_zip_path))
+  finally:
+    shutil.rmtree(dir_out)
+
+
+def test_compile_dir_to_zip(snapshot):
+  dir_tpl = os.path.join(FIXTURES_DIR, 'a')
+  dir_out = tempfile.mkdtemp()
+  o_zip = os.path.join(dir_out, 'o.zip')
+
+  variables = {
+      'a': 'AAA compile_dir_to_zip',
+      'b': 'BBB compile_dir_to_zip'}
+
+  try:
+    jj2c.compile_dir_to_zip(dir_tpl, o_zip, variables)
+    snapshot.assert_match(collect_contents_zip(o_zip))
   finally:
     shutil.rmtree(dir_out)
