@@ -34,6 +34,7 @@ setup(
     packages=find_packages(exclude=['docs', 'tests*']),
     include_package_data=True,
     author='Tom Tang',
+    scripts=['bin/jj2c'],
     install_requires=install_requires,
     dependency_links=dependency_links,
     author_email='tly1980@gmail.com'
