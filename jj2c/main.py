@@ -7,16 +7,14 @@ import json
 import os
 import sys
 
-import yaml
-
 import jj2c
 
 AP = argparse.ArgumentParser()
-AP.add_argument(
-    'var_file', help='file pointing to variables, can be either json or yaml')
 AP.add_argument('template', help='file pointing to template')
+AP.add_argument(
+    '-V', '--variables', default=[],
+    nargs='+', help='Content or files pointing to variables. Supported formats are: json, yaml and toml.')
 AP.add_argument('-o', '--output', default='-', help='where to save the file')
-AP.add_argument('-x', '--extra_variables', default=None, help='file pointing to variables')
 
 
 def is_tpl(fpath):
@@ -25,20 +23,10 @@ def is_tpl(fpath):
   return not fpath.endswith('.zip')
 
 
-def load_variables_str(text):
-  try:
-    return yaml.load(text)
-  except:
-    return json.loads(text)
-
-
-def load_variables(fpath):
-  with open(fpath, 'rb') as f:
-    if fpath.endswith('.json'):
-      return json.load(f)
-
-    if fpath.endswith('.yaml'):
-      return yaml.load(f)
+def load_variables(fname_or_content):
+  ve = jj2c.VariableExtractor(fname_or_content)
+  fmt, variables = ve.extract()
+  return variables
 
 
 def dump_file(fpath, content):
@@ -51,9 +39,9 @@ def dump_file(fpath, content):
 
 
 def main(args):
-  variables = load_variables(args.var_file)
-  if args.extra_variables:
-    x_variables = load_variables_str(args.extra_variables)
+  variables = {}
+  for file_or_content in args.variables:
+    x_variables = load_variables(file_or_content)
     variables.update(x_variables)
 
   if is_tpl(args.template):
