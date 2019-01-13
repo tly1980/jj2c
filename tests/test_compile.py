@@ -3,7 +3,6 @@ import os
 import shutil
 import tempfile
 import zipfile
-#from snapshottest import snapshot
 
 import jj2c
 

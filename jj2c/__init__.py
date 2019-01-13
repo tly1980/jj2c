@@ -3,32 +3,69 @@ import logging
 import os
 import shutil
 import tempfile
+import collections
+
+
+try:
+  from collections import OrderedDict as ODict
+except Exception as e:
+  ODict = dict
+
 
 import jinja2
-
-import yaml
 import toml
+import yaml
 
 
 class VariableExtractor(object):
+
+  _XMAPPING = ODict([
+      ('json', json.loads),
+      ('yaml', yaml.load),
+      ('toml', toml.loads)
+  ])
+
   def __init__(self, fname_or_content):
     self.fname_or_content = fname_or_content
-    self.data = None
 
-  def content_str(self, fname_or_content):
-    if os.path.exists(fname_or_content):
-      with open(fname_or_content, 'rb') as f:
-        return f.read()
+  def content_str(self):
+    if os.path.exists(self.fname_or_content):
+      with open(self.fname_or_content, 'r') as f:
+        fmt = self.fname_or_content.split('.')[-1]
+        return fmt, f.read()
+    else:
+      return None, self.fname_or_content
 
-  def extract(self):
-    funs = [yaml.load, toml.loads, json.loads]
-    content_str = self.content_str()
-    for f in funs:
+  def do_parse(self, fun, text):
+    _data = fun(text)
+    assert isinstance(_data, dict)
+    return _data
+
+  def extract(self, format_hint=None):
+    funs = ODict(self._XMAPPING)
+
+    fmt, text = self.content_str()
+
+    if fmt and not format_hint:
+      format_hint = fmt
+
+    if format_hint:
+      assert format_hint in funs.keys()
+
+    if format_hint:
       try:
-        self.data = f(content_str)
-        return self.data
+        f = funs.pop(format_hint)
+        return format_hint, self.do_parse(f, text)
       except Exception as e:
-        raise e
+        pass
+
+    for fname, f in funs.items():
+      try:
+        return fname, self.do_parse(f, text)
+      except Exception as e:
+        pass
+
+    raise Exception('Unspported format')
 
 
 def compile(template_str, variables):
