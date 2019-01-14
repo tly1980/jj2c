@@ -50,7 +50,7 @@ def test_BatchCompiler_1(snapshot):
   dir_out = tempfile.mkdtemp()
   variables = {'a': 'AAA', 'b': 'BBB'}
   try:
-    batch = jj2c.BatchCompiler2(variables, dir_tpl, dir_out)
+    batch = jj2c.BatchCompiler(variables, dir_tpl, dir_out)
     batch.compile()
     snapshot.assert_match(
         collect_contents(dir_out))

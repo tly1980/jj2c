@@ -74,30 +74,6 @@ def compile(template_str, variables):
 
 class BatchCompiler(object):
   def __init__(self, variables, template_dir, output_dir):
-    assert os.path.isdir(template_dir)
-
-    self.variables = variables
-    self.template_dir = template_dir
-    self.output_dir = output_dir
-
-  def compile(self):
-    os.makedirs(self.output_dir, exist_ok=True)
-    for root, dirs, files in os.walk(self.template_dir):
-      for fname in files:
-        dir_name = root[len(self.template_dir) + 1:]
-        dir_out = os.path.join(self.output_dir, dir_name)
-        if not os.path.exists(dir_out):
-          os.makedirs(dir_out)
-        fname_in = os.path.join(root, fname)
-        fname_out = os.path.join(dir_out, fname)
-        if fname_out.endswith('.tpl'):
-          fname_out = fname_out[:-4]
-        with open(fname_out, 'w') as fout:
-          fout.write(compile_file(fname_in, self.variables))
-
-
-class BatchCompiler2(object):
-  def __init__(self, variables, template_dir, output_dir):
     self.variables = variables
     self.template_dir = template_dir
     self.output_dir = output_dir

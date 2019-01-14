@@ -48,5 +48,6 @@ def test_basic_toml_as_file(snapshot):
   ve = jj2c.VariableExtractor(vars_file)
 
   fmt, data = ve.extract()
+  data['owner']['dob'] = data['owner']['dob'].isoformat()
   assert fmt == 'toml'
   snapshot.assert_match(data)
