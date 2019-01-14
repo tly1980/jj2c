@@ -2,7 +2,7 @@
 # snapshottest: v1 - https://goo.gl/zC4yUc
 from __future__ import unicode_literals
 
-from snapshottest import GenericRepr, Snapshot
+from snapshottest import Snapshot, GenericRepr
 
 
 snapshots = Snapshot()
@@ -30,7 +30,7 @@ snapshots['test_basic_toml_as_file 1'] = {
         'server': '192.168.1.1'
     },
     'owner': {
-        'dob': GenericRepr("datetime.datetime(1979, 5, 27, 7, 32, tzinfo=<toml.tz.TomlTz object at 0x10be60080>)"),
+        'dob': GenericRepr("datetime.datetime(1979, 5, 27, 7, 32, tzinfo=<toml.tz.TomlTz object at 0x10b74f390>)"),
         'name': 'Tom Preston-Werner'
     },
     'title': 'TOML 例子'

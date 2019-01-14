@@ -21,7 +21,7 @@ Or clone the repo:
 
     $ git clone https://github.com/tly1980/jj2c.git
     $ python setup.py install
-    
+
 Contributing
 ------------
 
@@ -31,3 +31,4 @@ Example
 -------
 
 TBD
+
