@@ -1,9 +1,12 @@
+from __future__ import print_function
+
+import collections
 import json
 import logging
 import os
 import shutil
+import sys
 import tempfile
-import collections
 
 
 try:
@@ -15,6 +18,10 @@ except Exception as e:
 import jinja2
 import toml
 import yaml
+
+
+def eprint(*args, **kwargs):
+  print(*args, file=sys.stderr, **kwargs)
 
 
 class VariableExtractor(object):
@@ -93,6 +100,7 @@ class BatchCompiler(object):
         fname_tpl = os.path.join(dir_name, fname)
         fname_out = os.path.join(dir_out, fname)
         tpl = self.jj2_env.get_template(fname_tpl)
+        eprint('rendering:', fname_tpl)
         if fname_out.endswith('.tpl'):
           fname_out = fname_out[:-4]
         with open(fname_out, 'w') as fout:
@@ -147,10 +155,11 @@ def compile_dir_2_zip(template_dir, dest_path, variables):
     shutil.rmtree(dir_compile)
 
 
-def compile_zip_2_dir(template_dir, dest_path, variables):
+def compile_zip_2_dir(template_zip, dest_path, variables):
   template_dir = tempfile.mkdtemp()
 
   try:
+    shutil.unpack_archive(template_zip, template_dir)
     compile_dir(template_dir, dest_path, variables)
   finally:
     shutil.rmtree(template_dir)
