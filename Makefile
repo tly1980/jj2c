@@ -7,3 +7,6 @@ package:
 
 clean:
 	rm -rvf build
+
+pypi:
+	python setup.py bdist_wheel --universal upload -r pypi
