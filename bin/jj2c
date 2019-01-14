@@ -38,6 +38,10 @@ def dump_file(fpath, content):
       f.write(content)
 
 
+def eprint(*args, **kwargs):
+  print(*args, file=sys.stderr, **kwargs)
+
+
 def main(args):
   variables = {}
   for file_or_content in args.variables:
@@ -46,13 +50,20 @@ def main(args):
 
   if is_tpl(args.template):
     with open(args.template) as f:
+      eprint('tpl(zip) to stdout')
       dump_file(args.output, jj2c.compile(f.read(), variables))
   elif args.template.endswith('.zip') and args.output.endswith('.zip'):
+    eprint('tpl(zip) to zip')
     jj2c.compile_zip_2_zip(args.template, args.output, variables)
-  elif args.output.endswith('.zip'):
+  elif args.template.endswith('.zip') and not args.output.endswith('.zip'):
+    eprint('tpl(zip) to dir')
+    jj2c.compile_zip_2_dir(args.template, args.output, variables)
+  elif not args.template.endswith('.zip') and args.output.endswith('.zip'):
+    eprint('tpl(dir) to zip')
     jj2c.compile_dir_2_zip(args.template, args.output, variables)
   elif not args.template.endswith('.zip') and not args.output.endswith('.zip'):
-    jj2c.compile_dir(args.template, args.output)
+    eprint('tpl(dir) to dir')
+    jj2c.compile_dir(args.template, args.output, variables)
   else:
     print('Unsupported')
 

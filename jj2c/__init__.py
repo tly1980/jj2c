@@ -135,3 +135,22 @@ def compile_zip_2_zip(src_path, dest_path, variables):
   finally:
     shutil.rmtree(dir_xtract)
     shutil.rmtree(dir_compile)
+
+
+def compile_dir_2_zip(template_dir, dest_path, variables):
+  dir_compile = tempfile.mkdtemp()
+
+  try:
+    compile_dir(template_dir, dir_compile, variables)
+    zip_folder(dir_compile, dest_path)
+  finally:
+    shutil.rmtree(dir_compile)
+
+
+def compile_zip_2_dir(template_dir, dest_path, variables):
+  template_dir = tempfile.mkdtemp()
+
+  try:
+    compile_dir(template_dir, dest_path, variables)
+  finally:
+    shutil.rmtree(template_dir)
