@@ -88,3 +88,20 @@ def test_compile_dir_2_zip(snapshot):
     snapshot.assert_match(collect_contents_zip(o_zip))
   finally:
     shutil.rmtree(dir_out)
+
+
+def test_compile_zip_2_dir(snapshot):
+  dir_tpl = os.path.join(FIXTURES_DIR, 'a')
+  dir_out = tempfile.mkdtemp()
+  tpl_zip = os.path.join(dir_out, 'a.zip')
+
+  shutil.make_archive(tpl_zip[:-4], 'zip', dir_tpl)
+  variables = {'a': 'AAA zip', 'b': 'BBB zip'}
+
+  dir_out2 = os.path.join(dir_out, 'output')
+
+  try:
+    jj2c.compile_zip_2_dir(tpl_zip, dir_out2, variables)
+    snapshot.assert_match(collect_contents(dir_out2))
+  finally:
+    shutil.rmtree(dir_out)

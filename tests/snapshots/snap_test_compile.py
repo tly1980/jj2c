@@ -97,3 +97,27 @@ snapshots['test_compile_file 1'] = '''hello compile_file!
 
 a is 
 b is '''
+
+snapshots['test_compile_zip_2_dir 1'] = {
+    'b/c/base': '''head:
+
+base - head
+
+
+body:
+
+base - body
+''',
+    'b/f2': '''f2 -- BBB zip
+There out her child sir his lived.''',
+    'f1': '''head:
+
+base - head
+
+
+body:
+
+f1 -- AAA zip
+In post mean shot ye.
+'''
+}
