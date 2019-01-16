@@ -6,7 +6,7 @@ package:
 	python setup.py sdist bdist_wheel
 
 clean:
-	rm -rvf build
+	rm -rvf build dist
 
 pypi:
 	twine upload dist/*
