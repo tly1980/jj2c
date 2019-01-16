@@ -20,7 +20,7 @@ AP.add_argument('-o', '--output', default='-', help='where to save the file')
 
 def is_tpl(fpath):
   msg = 'No such *FILE*: %s' % fpath
-  if not os.path.isdir(fpath):
+  if os.path.isdir(fpath):
     return False
   if not os.path.isfile(fpath):
     raise Exception(msg)
