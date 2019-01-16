@@ -48,22 +48,26 @@ def main(args):
     x_variables = load_variables(file_or_content)
     variables.update(x_variables)
 
-  if os.path.isdir(fpath):
+  template_path = args.template
+  if template_path.endswith('/'):
+    template_path = template_path[:-1]
+
+  if os.path.isdir(template_path):
     if args.output.endswith('.zip'):
       eprint('tpl(dir) to zip')
-      jj2c.compile_dir_2_zip(args.template, args.output, variables)
+      jj2c.compile_dir_2_zip(template_path, args.output, variables)
     else:
       eprint('tpl(dir) to dir')
-      jj2c.compile_dir(args.template, args.output, variables)
-  elif args.template.endswith('.zip'):
+      jj2c.compile_dir(template_path, args.output, variables)
+  elif template_path.endswith('.zip'):
     if args.output.endswith('.zip'):
       eprint('tpl(zip) to zip')
-      jj2c.compile_zip_2_zip(args.template, args.output, variables)
+      jj2c.compile_zip_2_zip(template_path, args.output, variables)
     else:
       eprint('tpl(zip) to dir')
-      jj2c.compile_zip_2_dir(args.template, args.output, variables)
-  elif is_tpl(args.template):
-    with open(args.template) as f:
+      jj2c.compile_zip_2_dir(template_path, args.output, variables)
+  elif is_tpl(template_path):
+    with open(template_path) as f:
       eprint('tpl(zip) to stdout')
       dump_file(args.output, jj2c.compile(f.read(), variables))
   else:
