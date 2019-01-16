@@ -48,22 +48,24 @@ def main(args):
     x_variables = load_variables(file_or_content)
     variables.update(x_variables)
 
-  if is_tpl(args.template):
+  if os.path.isdir(fpath):
+    if args.output.endswith('.zip'):
+      eprint('tpl(dir) to zip')
+      jj2c.compile_dir_2_zip(args.template, args.output, variables)
+    else:
+      eprint('tpl(dir) to dir')
+      jj2c.compile_dir(args.template, args.output, variables)
+  elif args.template.endswith('.zip'):
+    if args.output.endswith('.zip'):
+      eprint('tpl(zip) to zip')
+      jj2c.compile_zip_2_zip(args.template, args.output, variables)
+    else:
+      eprint('tpl(zip) to dir')
+      jj2c.compile_zip_2_dir(args.template, args.output, variables)
+  elif is_tpl(args.template):
     with open(args.template) as f:
       eprint('tpl(zip) to stdout')
       dump_file(args.output, jj2c.compile(f.read(), variables))
-  elif args.template.endswith('.zip') and args.output.endswith('.zip'):
-    eprint('tpl(zip) to zip')
-    jj2c.compile_zip_2_zip(args.template, args.output, variables)
-  elif args.template.endswith('.zip') and not args.output.endswith('.zip'):
-    eprint('tpl(zip) to dir')
-    jj2c.compile_zip_2_dir(args.template, args.output, variables)
-  elif not args.template.endswith('.zip') and args.output.endswith('.zip'):
-    eprint('tpl(dir) to zip')
-    jj2c.compile_dir_2_zip(args.template, args.output, variables)
-  elif not args.template.endswith('.zip') and not args.output.endswith('.zip'):
-    eprint('tpl(dir) to dir')
-    jj2c.compile_dir(args.template, args.output, variables)
   else:
     print('Unsupported')
 
