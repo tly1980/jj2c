@@ -8,7 +8,6 @@ import os
 import sys
 
 import yaml
-
 from jj2c import eprint
 import jj2c
 
