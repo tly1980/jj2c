@@ -9,6 +9,9 @@ import sys
 import tempfile
 
 
+__VERSION__ = '0.0.6'
+
+
 try:
   from collections import OrderedDict as ODict
 except Exception as e:

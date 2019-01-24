@@ -1,8 +1,15 @@
-from setuptools import setup, find_packages
 from codecs import open
 from os import path
+from setuptools import setup, find_packages
+import re
 
-__version__ = '0.0.5'
+
+module_name = 'jj2c'
+with open("{name}/__init__.py".format(name=module_name), encoding='utf-8') as f:
+  __version__ = re.search(
+    '^__version__\s*=\s*[\'\"]([^\'\"]+)', f.read(),
+    flags=re.I | re.M).group(1)
+
 
 here = path.abspath(path.dirname(__file__))
 

@@ -16,6 +16,9 @@ AP.add_argument(
     '-V', '--variables', default=[],
     nargs='+', help='Content or files pointing to variables. Supported formats are: json, yaml and toml.')
 AP.add_argument('-o', '--output', default='-', help='where to save the file')
+AP.add_argument(
+    '-i', '--inspect',
+    help='Inspect parameters')
 
 
 def is_tpl(fpath):
@@ -45,32 +48,43 @@ def dump_file(fpath, content):
 def main(args):
   variables = {}
   for file_or_content in args.variables:
+    eprint('Parsing variables from: {}'.format(file_or_content))
     x_variables = load_variables(file_or_content)
+    eprint(yaml.dump(x_variables))
+    eprint('-----\n')
     variables.update(x_variables)
 
   template_path = args.template
   if template_path.endswith('/'):
     template_path = template_path[:-1]
 
+  path_info = 'src: {}\ndest:{}'.format(template_path, args.output)
+
   if os.path.isdir(template_path):
     if args.output.endswith('.zip'):
-      eprint('tpl(dir) to zip')
+      eprint('Compiling... tpl(dir) to zip')
+      eprint(path_info)
       jj2c.compile_dir_2_zip(template_path, args.output, variables)
     else:
-      eprint('tpl(dir) to dir')
+      eprint('Compiling... tpl(dir) to dir')
+      eprint(path_info)
       jj2c.compile_dir(template_path, args.output, variables)
   elif template_path.endswith('.zip'):
     if args.output.endswith('.zip'):
-      eprint('tpl(zip) to zip')
+      eprint('Compiling... tpl(zip) to zip')
+      eprint(path_info)
       jj2c.compile_zip_2_zip(template_path, args.output, variables)
     else:
-      eprint('tpl(zip) to dir')
+      eprint('Compiling... tpl(zip) to dir')
+      eprint(path_info)
       jj2c.compile_zip_2_dir(template_path, args.output, variables)
   elif is_tpl(template_path):
     with open(template_path) as f:
-      eprint('tpl(zip) to stdout')
+      eprint('Compiling... tpl(zip) to stdout')
+      eprint(path_info)
       dump_file(args.output, jj2c.compile(f.read(), variables))
   else:
+    eprint('Path info:', path_info)
     print('Unsupported')
 
 
