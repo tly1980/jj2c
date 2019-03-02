@@ -7,6 +7,8 @@ import json
 import os
 import sys
 
+import yaml
+
 from jj2c import eprint
 import jj2c
 
@@ -16,9 +18,7 @@ AP.add_argument(
     '-V', '--variables', default=[],
     nargs='+', help='Content or files pointing to variables. Supported formats are: json, yaml and toml.')
 AP.add_argument('-o', '--output', default='-', help='where to save the file')
-AP.add_argument(
-    '-i', '--inspect',
-    help='Inspect parameters')
+AP.add_argument('-i', '--inspect', action='store_true', default=False, help='Inspect parameters')
 
 
 def is_tpl(fpath):
@@ -48,10 +48,12 @@ def dump_file(fpath, content):
 def main(args):
   variables = {}
   for file_or_content in args.variables:
-    eprint('Parsing variables from: {}'.format(file_or_content))
+    if args.inspect:
+      eprint('Parsing variables from: {}'.format(file_or_content))
     x_variables = load_variables(file_or_content)
-    eprint(yaml.dump(x_variables))
-    eprint('-----\n')
+    if args.inspect:
+      eprint(yaml.dump(x_variables))
+      eprint('-----\n')
     variables.update(x_variables)
 
   template_path = args.template
