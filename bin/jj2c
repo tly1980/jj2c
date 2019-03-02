@@ -7,6 +7,8 @@ import json
 import os
 import sys
 
+import yaml
+
 from jj2c import eprint
 import jj2c
 
@@ -16,11 +18,7 @@ AP.add_argument(
     '-V', '--variables', default=[],
     nargs='+', help='Content or files pointing to variables. Supported formats are: json, yaml and toml.')
 AP.add_argument('-o', '--output', default='-', help='where to save the file')
-AP.add_argument(
-    '-i', '--inspect',
-    action='store_true',
-    default=False,
-    help='Inspect parameters')
+AP.add_argument('-i', '--inspect', action='store_true', default=False, help='Inspect parameters')
 
 
 def is_tpl(fpath):
