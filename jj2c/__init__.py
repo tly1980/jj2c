@@ -94,6 +94,7 @@ class BatchCompiler(object):
     os.makedirs(self.output_dir, exist_ok=True)
 
     for root, dirs, files in os.walk(self.template_dir):
+      files = [x for x in files if not x.startswith('.')]          
       for fname in files:
         dir_name = root[len(self.template_dir) + 1:]
         dir_out = os.path.join(self.output_dir, dir_name)
