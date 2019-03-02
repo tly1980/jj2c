@@ -7,8 +7,9 @@ import re
 module_name = 'jj2c'
 with open("{name}/__init__.py".format(name=module_name), encoding='utf-8') as f:
   __version__ = re.search(
-    '^__version__\s*=\s*[\'\"]([^\'\"]+)', f.read(),
-    flags=re.I | re.M).group(1)
+      '^__version__\s*=\s*[\'\"]([^\'\"]+)',
+      f.read(), flags=re.I | re.M
+  ).group(1)
 
 
 here = path.abspath(path.dirname(__file__))
