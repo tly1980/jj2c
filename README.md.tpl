@@ -40,10 +40,34 @@ Or clone the repo:
 Using Jinja2 extendsions
 ------------------------
 
-If you wish to use jinja2 extensions, use `-e` or `--extensions` tags.
+Let say you have a `use_do.tpl` with following contents:
 
 ```
-jj2c -e jinja2.ext.do '{%- set a = [] -%} {% do a.append(1) %} {% do a.append(2) %}'
+{%- set a = [] -%}
+{%- do a.append(1) -%}
+{%- do a.append(2) -%}
+{%- do a.append(name) -%}
+{{ a }}
+```
+
+In order to render those content properly you will need
+`jinja2.ext.do` extension.
+
+Use `-e` or `--extensions` tags to specify the extensions. And you can specify
+more than one.
+
+```
+jj2c tests/fixtures/use_do.tpl -V 'name: jack' -e jinja2.ext.do jinja2.ext.i18n
+```
+
+Output is:
+```
+
+Using extensions: ['jinja2.ext.do', 'jinja2.ext.i18n']
+Compiling... file to stdout
+src: tests/fixtures/use_do.tpl
+dest:-
+[1, 2, 'jack']
 ```
 
 

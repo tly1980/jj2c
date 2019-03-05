@@ -1,9 +1,7 @@
 jj2c
 ===============================
 
-
-[2]
-version number: 0.0.9
+version number: 0.1.0
 author: Tom Tang
 
 Overview
@@ -37,6 +35,36 @@ Or clone the repo:
 
     $ git clone https://github.com/tly1980/jj2c.git
     $ python setup.py install
+
+
+Using Jinja2 extendsions
+------------------------
+
+Let say you have a `use_do.tpl` with following contents:
+
+```[1, 2, Undefined]
+```
+
+In order to render those content properly you will need
+`jinja2.ext.do` extension.
+
+Use `-e` or `--extensions` tags to specify the extensions. And you can specify
+more than one.
+
+```
+jj2c tests/fixtures/use_do.tpl -V 'name: jack' -e jinja2.ext.do jinja2.ext.i18n
+```
+
+Output is:
+```
+
+Using extensions: ['jinja2.ext.do', 'jinja2.ext.i18n']
+Compiling... file to stdout
+src: tests/fixtures/use_do.tpl
+dest:-
+[1, 2, 'jack']
+```
+
 
 Contributing
 ------------
