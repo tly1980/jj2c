@@ -121,3 +121,5 @@ f1 -- AAA zip
 In post mean shot ye.
 '''
 }
+
+snapshots['test_compile_file_usisng_extensions 1'] = "[1, 2, 'jack']"

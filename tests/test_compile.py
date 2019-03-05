@@ -34,6 +34,13 @@ def test_compile_file(snapshot):
   snapshot.assert_match(text)
 
 
+def test_compile_file_usisng_extensions(snapshot):
+  fpath = os.path.join(FIXTURES_DIR, 'use_do.tpl')
+  text = jj2c.compile_file(
+      fpath, {'name': 'jack'}, extensions=['jinja2.ext.do'])
+  snapshot.assert_match(text)
+
+
 def collect_contents(folder):
   contents = {}
   for root, dirs, files in os.walk(folder):

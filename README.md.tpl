@@ -36,6 +36,17 @@ Or clone the repo:
     $ git clone https://github.com/tly1980/jj2c.git
     $ python setup.py install
 
+
+Using Jinja2 extendsions
+------------------------
+
+If you wish to use jinja2 extensions, use `-e` or `--extensions` tags.
+
+```
+jj2c -e jinja2.ext.do '{%- set a = [] -%} {% do a.append(1) %} {% do a.append(2) %}'
+```
+
+
 Contributing
 ------------
 
