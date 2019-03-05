@@ -1,7 +1,7 @@
 jj2c
 ====
 
-version number: 0.1.1 author: Tom Tang
+version number: 0.1.2 author: Tom Tang
 
 Overview
 --------
