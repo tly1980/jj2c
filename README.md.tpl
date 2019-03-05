@@ -1,9 +1,7 @@
 jj2c
 ===============================
 
-
-[2]
-version number: 0.0.9
+version number: {{ version }}
 author: Tom Tang
 
 Overview
@@ -47,3 +45,4 @@ Example
 -------
 
 TBD
+

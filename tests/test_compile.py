@@ -14,13 +14,23 @@ FIXTURES_DIR = os.path.join(
 
 
 def test_compile():
-  text = jj2c.compile('hello {{ name }}!', {'name': 'world'})
+  text = jj2c.compile(
+      'hello {{ name }}!', {'name': 'world'}, extensions=[])
   assert text == 'hello world!'
+
+
+def test_compile_usisng_extensions():
+  text = jj2c.compile(
+      '''{%- set a=[] -%}
+{%- do a.append('jack') -%}
+{%- do a.append('rose') -%}
+{{ a }}''', {}, extensions=['jinja2.ext.do'])
+  assert text == "['jack', 'rose']"
 
 
 def test_compile_file(snapshot):
   fpath = os.path.join(FIXTURES_DIR, 'hello.tpl')
-  text = jj2c.compile_file(fpath, {'name': 'compile_file'})
+  text = jj2c.compile_file(fpath, {'name': 'compile_file'}, extensions=[])
   snapshot.assert_match(text)
 
 
@@ -50,7 +60,7 @@ def test_BatchCompiler_1(snapshot):
   dir_out = tempfile.mkdtemp()
   variables = {'a': 'AAA', 'b': 'BBB'}
   try:
-    batch = jj2c.BatchCompiler(variables, dir_tpl, dir_out)
+    batch = jj2c.BatchCompiler(variables, dir_tpl, dir_out, extensions=[])
     batch.compile()
     snapshot.assert_match(
         collect_contents(dir_out))
@@ -68,7 +78,7 @@ def test_compile_zip_2_zip(snapshot):
   variables = {'a': 'AAA zip', 'b': 'BBB zip'}
 
   try:
-    jj2c.compile_zip_2_zip(tpl_zip, o_zip, variables)
+    jj2c.compile_zip_2_zip(tpl_zip, o_zip, variables, extensions=[])
     snapshot.assert_match(collect_contents_zip(o_zip))
   finally:
     shutil.rmtree(dir_out)
@@ -84,7 +94,7 @@ def test_compile_dir_2_zip(snapshot):
       'b': 'BBB compile_dir_to_zip'}
 
   try:
-    jj2c.compile_dir_2_zip(dir_tpl, o_zip, variables)
+    jj2c.compile_dir_2_zip(dir_tpl, o_zip, variables, extensions=[])
     snapshot.assert_match(collect_contents_zip(o_zip))
   finally:
     shutil.rmtree(dir_out)
@@ -101,7 +111,7 @@ def test_compile_zip_2_dir(snapshot):
   dir_out2 = os.path.join(dir_out, 'output')
 
   try:
-    jj2c.compile_zip_2_dir(tpl_zip, dir_out2, variables)
+    jj2c.compile_zip_2_dir(tpl_zip, dir_out2, variables, extensions=[])
     snapshot.assert_match(collect_contents(dir_out2))
   finally:
     shutil.rmtree(dir_out)

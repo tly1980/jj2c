@@ -9,7 +9,7 @@ import sys
 import tempfile
 
 
-__VERSION__ = '0.0.8'
+__VERSION__ = '0.0.9'
 
 
 try:
@@ -78,17 +78,19 @@ class VariableExtractor(object):
     raise Exception('Unspported format')
 
 
-def compile(template_str, variables):
-  return jinja2.Template(template_str).render(**variables)
+def compile(template_str, variables, extensions):
+  jj2env = jinja2.Environment(extensions=extensions)
+  return jj2env.from_string(template_str).render(**variables)
 
 
 class BatchCompiler(object):
-  def __init__(self, variables, template_dir, output_dir):
+  def __init__(self, variables, template_dir, output_dir, extensions):
     self.variables = variables
     self.template_dir = template_dir
     self.output_dir = output_dir
     self.jj2_env = jinja2.Environment(
-        loader=jinja2.FileSystemLoader(self.template_dir))
+        loader=jinja2.FileSystemLoader(self.template_dir),
+        extensions=extensions)
 
   def compile(self):
     os.makedirs(self.output_dir, exist_ok=True)
@@ -111,13 +113,13 @@ class BatchCompiler(object):
           tpl.stream(self.variables).dump(fout)
 
 
-def compile_file(template_fpath, variables):
+def compile_file(template_fpath, variables, extensions):
   with open(template_fpath, 'r') as f:
-    return jinja2.Template(f.read()).render(**variables)
+    return compile(f.read(), variables, extensions)
 
 
-def compile_dir(template_dir, output_dir, variables):
-  batcher = BatchCompiler(variables, template_dir, output_dir)
+def compile_dir(template_dir, output_dir, variables, extensions):
+  batcher = BatchCompiler(variables, template_dir, output_dir, extensions)
   batcher.compile()
 
 
@@ -127,43 +129,43 @@ def zip_folder(folder, dest_path):
   shutil.make_archive(dest_path, 'zip', folder)
 
 
-def compile_dir_2_zip(template_dir, dest_path, variables):
+def compile_dir_2_zip(template_dir, dest_path, variables, extensions):
   dir_compile = tempfile.mkdtemp()
 
   try:
-    compile_dir(template_dir, dir_compile, variables)
+    compile_dir(template_dir, dir_compile, variables, extensions)
     zip_folder(dir_compile, dest_path)
   finally:
     shutil.rmtree(dir_compile)
 
 
-def compile_zip_2_zip(src_path, dest_path, variables):
+def compile_zip_2_zip(src_path, dest_path, variables, extensions):
   dir_xtract = tempfile.mkdtemp()
   dir_compile = tempfile.mkdtemp()
   try:
     shutil.unpack_archive(src_path, dir_xtract)
-    compile_dir(dir_xtract, dir_compile, variables)
+    compile_dir(dir_xtract, dir_compile, variables, extensions)
     zip_folder(dir_compile, dest_path)
   finally:
     shutil.rmtree(dir_xtract)
     shutil.rmtree(dir_compile)
 
 
-def compile_dir_2_zip(template_dir, dest_path, variables):
+def compile_dir_2_zip(template_dir, dest_path, variables, extensions):
   dir_compile = tempfile.mkdtemp()
 
   try:
-    compile_dir(template_dir, dir_compile, variables)
+    compile_dir(template_dir, dir_compile, variables, extensions)
     zip_folder(dir_compile, dest_path)
   finally:
     shutil.rmtree(dir_compile)
 
 
-def compile_zip_2_dir(template_zip, dest_path, variables):
+def compile_zip_2_dir(template_zip, dest_path, variables, extensions):
   template_dir = tempfile.mkdtemp()
 
   try:
     shutil.unpack_archive(template_zip, template_dir)
-    compile_dir(template_dir, dest_path, variables)
+    compile_dir(template_dir, dest_path, variables, extensions)
   finally:
     shutil.rmtree(template_dir)

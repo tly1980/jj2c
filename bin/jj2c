@@ -18,6 +18,7 @@ AP.add_argument(
     nargs='+', help='Content or files pointing to variables. Supported formats are: json, yaml and toml.')
 AP.add_argument('-o', '--output', default='-', help='where to save the file')
 AP.add_argument('-i', '--inspect', action='store_true', default=False, help='Inspect parameters')
+AP.add_argument('-e', '--extensions', nargs='+', type=str, default=[], help='Jinja2 extensions')
 
 
 def is_tpl(fpath):
@@ -46,6 +47,7 @@ def dump_file(fpath, content):
 
 def main(args):
   variables = {}
+
   for file_or_content in args.variables:
     if args.inspect:
       eprint('Parsing variables from: {}'.format(file_or_content))
@@ -59,34 +61,45 @@ def main(args):
   if template_path.endswith('/'):
     template_path = template_path[:-1]
 
+  if args.extensions:
+    eprint(f'Using extensions: {args.extensions}')
+
   path_info = 'src: {}\ndest:{}'.format(template_path, args.output)
 
   if os.path.isdir(template_path):
     if args.output.endswith('.zip'):
       eprint('Compiling... tpl(dir) to zip')
       eprint(path_info)
-      jj2c.compile_dir_2_zip(template_path, args.output, variables)
+      jj2c.compile_dir_2_zip(
+          template_path, args.output, variables, args.extensions)
     else:
       eprint('Compiling... tpl(dir) to dir')
       eprint(path_info)
-      jj2c.compile_dir(template_path, args.output, variables)
+      jj2c.compile_dir(
+          template_path, args.output, variables, args.extensions)
   elif template_path.endswith('.zip'):
     if args.output.endswith('.zip'):
       eprint('Compiling... tpl(zip) to zip')
       eprint(path_info)
-      jj2c.compile_zip_2_zip(template_path, args.output, variables)
+      jj2c.compile_zip_2_zip(
+          template_path, args.output, variables, args.extensions)
     else:
       eprint('Compiling... tpl(zip) to dir')
       eprint(path_info)
-      jj2c.compile_zip_2_dir(template_path, args.output, variables)
+      jj2c.compile_zip_2_dir(
+          template_path, args.output, variables, args.extensions)
   elif is_tpl(template_path):
+    if args.output == '-':
+      eprint('Compiling... file to stdout')
+    else:
+      eprint(f'Compiling... file to file: {args.output}')
     with open(template_path) as f:
-      eprint('Compiling... tpl(zip) to stdout')
       eprint(path_info)
-      dump_file(args.output, jj2c.compile(f.read(), variables))
+      dump_file(args.output, jj2c.compile(f.read(), variables, args.extensions))
   else:
     eprint('Path info:', path_info)
-    print('Unsupported')
+    print('Unsupported path')
+    sys.exit(1)
 
 
 if __name__ == '__main__':
