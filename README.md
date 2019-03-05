@@ -42,7 +42,12 @@ Using Jinja2 extendsions
 
 Let say you have a `use_do.tpl` with following contents:
 
-```[1, 2, Undefined]
+```
+{%- set a = [] -%}
+{%- do a.append(1) -%}
+{%- do a.append(2) -%}
+{%- do a.append(name) -%}
+{{ a }}
 ```
 
 In order to render those content properly you will need

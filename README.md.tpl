@@ -43,11 +43,13 @@ Using Jinja2 extendsions
 Let say you have a `use_do.tpl` with following contents:
 
 ```
+{%- raw %}
 {%- set a = [] -%}
 {%- do a.append(1) -%}
 {%- do a.append(2) -%}
 {%- do a.append(name) -%}
 {{ a }}
+{% endraw -%}
 ```
 
 In order to render those content properly you will need
