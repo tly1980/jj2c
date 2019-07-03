@@ -7,4 +7,30 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots['test_lines_as_array 1'] = b'>> my_lst\n1 - a\n2 - bb\n3 - ccc\n4 - dddd\n\n\n>> my_lst2\n1 - eeee\n2 - fff\n3 - gg\n4 - h\n'
+snapshots['test_lines_as_array_inspect 1'] = '''## My List 1
+1 - a
+2 - bb
+3 - ccc
+4 - dddd
+
+
+## My List 2
+1 - eeee
+2 - fff
+3 - gg
+4 - h
+'''
+
+snapshots['test_lines_as_array 1'] = '''## My List 1
+1 - a
+2 - bb
+3 - ccc
+4 - dddd
+
+
+## My List 2
+1 - eeee
+2 - fff
+3 - gg
+4 - h
+'''

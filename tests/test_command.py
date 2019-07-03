@@ -21,5 +21,21 @@ def test_lines_as_array(snapshot):
       'lst1=%s' % lst1_txt,
       'lst2=%s' % lst2_txt
   ]
-  output = subprocess.check_output(cmd)
+  output = subprocess.check_output(cmd).decode('utf8')
+  snapshot.assert_match(output)
+
+
+def test_lines_as_array_inspect(snapshot):
+  tpl = os.path.join(FIXTURES_DIR, 'lines_array.tpl')
+  lst1_txt = os.path.join(FIXTURES_DIR, 'lst1.txt')
+  lst2_txt = os.path.join(FIXTURES_DIR, 'lst2.txt')
+  cmd = [
+      'bin/jj2c',
+      tpl,
+      '--lines_as_array',
+      'lst1=%s' % lst1_txt,
+      'lst2=%s' % lst2_txt,
+      '-i'
+  ]
+  output = subprocess.check_output(cmd).decode('utf8')
   snapshot.assert_match(output)
