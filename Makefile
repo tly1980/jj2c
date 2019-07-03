@@ -1,7 +1,7 @@
 VER=$(shell python -c 'import jj2c; print(jj2c.__VERSION__)')
 
 test:
-	pytest
+	PYTHONPATH=. pytest
 
 doc:
 	jj2c README.md.tpl -V "version: $(VER)" -e 'jinja2.ext.do' -o README.md

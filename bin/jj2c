@@ -11,7 +11,9 @@ import yaml
 from jj2c import eprint
 import jj2c
 
-AP = argparse.ArgumentParser()
+AP = argparse.ArgumentParser(
+    description='jj2c -- A jinja2 template compiler, version: %s' % jj2c.__VERSION__
+)
 AP.add_argument('template', help='file pointing to template')
 AP.add_argument(
     '-V', '--variables', default=[],
@@ -19,6 +21,20 @@ AP.add_argument(
 AP.add_argument('-o', '--output', default='-', help='where to save the file')
 AP.add_argument('-i', '--inspect', action='store_true', default=False, help='Inspect parameters')
 AP.add_argument('-e', '--extensions', nargs='+', type=str, default=[], help='Jinja2 extensions')
+AP.add_argument('-la', '--lines_as_array', nargs='+', type=str, default=[], help='use line split txt file as an array')
+
+
+def load_lines_as_array(larg):
+  ret = {}
+  try:
+    fname, fpath = larg.split('=')
+  except ValueError:
+    eprint('lines_as_array argument has to be a=')
+    sys.exit(2)
+
+  with open(fpath) as f:
+    ret[fname] = [l2 for l2 in [l.strip() for l in f.readlines()] if l2]
+  return ret
 
 
 def is_tpl(fpath):
@@ -55,6 +71,14 @@ def main(args):
     if args.inspect:
       eprint(yaml.dump(x_variables))
       eprint('-----\n')
+    variables.update(x_variables)
+
+  for l in args.lines_as_array:
+    x_variables = load_lines_as_array(l)
+    import pdb; pdb.set_trace
+    if args.inspect:
+      eprint('Parsing variables from: {}'.format(l))
+      eprint(yaml.dump(x_variables))
     variables.update(x_variables)
 
   template_path = args.template
