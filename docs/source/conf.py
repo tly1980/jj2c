@@ -49,8 +49,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'jj2c'
-copyright = '2016, 'Tom Tang'
-author = ''Tom Tang'
+copyright = '2019, Tom Tang'
+author = 'Tom Tang'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
