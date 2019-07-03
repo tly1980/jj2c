@@ -19,6 +19,7 @@ except Exception as e:
 
 
 import jinja2
+import semver
 import toml
 import yaml
 
@@ -27,11 +28,18 @@ def eprint(*args, **kwargs):
   print(*args, file=sys.stderr, **kwargs)
 
 
+def find_yaml_load():
+  if semver.compare(yaml.__version__, '5.1.0') >= 0:
+    return yaml.safe_load
+  else:
+    return yaml.load
+
+
 class VariableExtractor(object):
 
   _XMAPPING = ODict([
       ('json', json.loads),
-      ('yaml', yaml.load),
+      ('yaml', find_yaml_load()),
       ('toml', toml.loads)
   ])
 
