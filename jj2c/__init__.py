@@ -9,7 +9,7 @@ import sys
 import tempfile
 
 
-__VERSION__ = '0.1.2'
+__VERSION__ = '0.1.3'
 
 
 try:
