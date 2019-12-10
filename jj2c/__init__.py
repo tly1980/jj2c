@@ -9,7 +9,7 @@ import sys
 import tempfile
 
 
-__VERSION__ = '0.2.0'
+__VERSION__ = '0.2.1'
 
 
 try:
@@ -19,7 +19,6 @@ except Exception as e:
 
 
 import jinja2
-import semver
 import toml
 import yaml
 
@@ -29,10 +28,9 @@ def eprint(*args, **kwargs):
 
 
 def find_yaml_load():
-  if semver.compare(yaml.__version__, '5.1.0') >= 0:
+  if hasattr(yaml, 'safe_load'):
     return yaml.safe_load
-  else:
-    return yaml.load
+  return yaml.load
 
 
 class VariableExtractor(object):
