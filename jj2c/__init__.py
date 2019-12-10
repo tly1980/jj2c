@@ -1,8 +1,6 @@
 from __future__ import print_function
 
-import collections
 import json
-import logging
 import os
 import shutil
 import sys
@@ -14,7 +12,7 @@ __VERSION__ = '0.2.1'
 
 try:
   from collections import OrderedDict as ODict
-except Exception as e:
+except Exception:
   ODict = dict
 
 
@@ -72,13 +70,13 @@ class VariableExtractor(object):
       try:
         f = funs.pop(format_hint)
         return format_hint, self.do_parse(f, text)
-      except Exception as e:
+      except Exception:
         pass
 
     for fname, f in funs.items():
       try:
         return fname, self.do_parse(f, text)
-      except Exception as e:
+      except Exception:
         pass
 
     raise Exception('Unspported format')
@@ -108,7 +106,7 @@ class BatchCompiler(object):
         dir_out = os.path.join(self.output_dir, dir_name)
         if not os.path.exists(dir_out):
           os.makedirs(dir_out)
-        #fname_in = os.path.join(root, fname)
+        # fname_in = os.path.join(root, fname)
         fname_tpl = os.path.join(dir_name, fname)
         fname_out = os.path.join(dir_out, fname)
         tpl = self.jj2_env.get_template(fname_tpl)
@@ -133,16 +131,6 @@ def zip_folder(folder, dest_path):
   if dest_path.endswith('.zip'):
     dest_path = dest_path[:-4]
   shutil.make_archive(dest_path, 'zip', folder)
-
-
-def compile_dir_2_zip(template_dir, dest_path, variables, extensions):
-  dir_compile = tempfile.mkdtemp()
-
-  try:
-    compile_dir(template_dir, dir_compile, variables, extensions)
-    zip_folder(dir_compile, dest_path)
-  finally:
-    shutil.rmtree(dir_compile)
 
 
 def compile_zip_2_zip(src_path, dest_path, variables, extensions):

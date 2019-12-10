@@ -5,9 +5,10 @@ import re
 
 
 module_name = 'jj2c'
-with open("{name}/__init__.py".format(name=module_name), encoding='utf-8') as f:
+version_file = "{name}/__init__.py".format(name=module_name)
+with open(version_file, encoding='utf-8') as f:
   __version__ = re.search(
-      '^__version__\s*=\s*[\'\"]([^\'\"]+)',
+      r'^__version__\s*=\s*[\'\"]([^\'\"]+)',
       f.read(), flags=re.I | re.M
   ).group(1)
 
@@ -23,7 +24,8 @@ with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
   all_reqs = f.read().split('\n')
 
 install_requires = [x.strip() for x in all_reqs if 'git+' not in x]
-dependency_links = [x.strip().replace('git+', '') for x in all_reqs if x.startswith('git+')]
+dependency_links = [
+    x.strip().replace('git+', '') for x in all_reqs if x.startswith('git+')]
 
 setup(
     name='jj2c',

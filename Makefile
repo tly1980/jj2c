@@ -17,3 +17,6 @@ clean:
 pypi:
 	twine upload dist/*
 	#python setup.py bdist_wheel --universal upload -r pypi
+
+lint:
+	flake8 --ignore=E111 ./jj2c ./bin setup.py
