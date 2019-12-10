@@ -6,4 +6,4 @@ coverage
 pypi-publisher
 pytest
 snapshottest
-
+flake8
