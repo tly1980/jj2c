@@ -75,7 +75,6 @@ def main(args):
 
   for l in args.lines_as_array:
     x_variables = load_lines_as_array(l)
-    import pdb; pdb.set_trace
     if args.inspect:
       eprint('Parsing variables from: {}'.format(l))
       eprint(yaml.dump(x_variables))
